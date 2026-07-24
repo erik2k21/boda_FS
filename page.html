@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Sube tus fotos de la Boda!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fdfbf7;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid #eae5d9;
+    }
+    h1 { color: #4a5d4e; font-size: 24px; margin-bottom: 8px; font-weight: 600; }
+    p { color: #666; font-size: 14px; margin-bottom: 24px; line-height: 1.4; }
+    
+    .file-input-wrapper { margin-bottom: 20px; }
+    input[type="file"] { display: none; }
+    .custom-file-btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px;
+      background-color: #f0f4f1;
+      color: #4a5d4e;
+      border: 2px dashed #8f9e8b;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #4a5d4e;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled { background-color: #ccc; cursor: not-allowed; }
+    
+    #status { margin-top: 18px; font-size: 14px; font-weight: 500; }
+    .success { color: #2e7d32; }
+    .error { color: #c62828; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>📸 Compartir Recuerdos</h1>
+    <p>¡Gracias por acompañarnos! Sube aquí las fotos y videos que tomes durante la celebración.</p>
+
+    <div class="file-input-wrapper">
+      <label for="fileInput" class="custom-file-btn" id="fileLabel">
+        📷 Seleccionar fotos o videos
+      </label>
+      <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="updateLabel()">
+    </div>
+
+    <button id="uploadBtn" onclick="uploadFiles()">Subir a la galería</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // REEMPLAZA CON LA URL DE TU GOOGLE APPS SCRIPT
+    const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID/exec";
+
+    function updateLabel() {
+      const input = document.getElementById('fileInput');
+      const label = document.getElementById('fileLabel');
+      if (input.files.length > 0) {
+        label.innerText = `📄 ${input.files.length} archivo(s) seleccionado(s)`;
+      } else {
+        label.innerText = '📷 Seleccionar fotos o videos';
+      }
+    }
+
+    async function uploadFiles() {
+      const fileInput = document.getElementById('fileInput');
+      const statusDiv = document.getElementById('status');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const files = fileInput.files;
+
+      if (files.length === 0) {
+        statusDiv.className = "error";
+        statusDiv.innerText = "Por favor selecciona al menos una foto.";
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        statusDiv.className = "";
+        statusDiv.innerText = `Subiendo foto ${i + 1} de ${files.length}...`;
+
+        try {
+          const base64Data = await convertToBase64(file);
+          const payload = {
+            fileName: `${Date.now()}_${file.name}`,
+            mimeType: file.type,
+            base64: base64Data.split(',')[1]
+          };
+
+          await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      statusDiv.className = "success";
+      statusDiv.innerText = "¡Listo! Muchas gracias por compartir tus fotos. 🎉";
+      fileInput.value = "";
+      updateLabel();
+      uploadBtn.disabled = false;
+    }
+
+    function convertToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
+</body>
+</html>
