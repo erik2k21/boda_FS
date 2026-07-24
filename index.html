@@ -1,151 +1,258 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¡Sube tus fotos de la Boda!</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #fdfbf7;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .card {
-      background: #ffffff;
-      padding: 30px 25px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      border: 1px solid #eae5d9;
-    }
-    h1 { color: #4a5d4e; font-size: 24px; margin-bottom: 8px; font-weight: 600; }
-    p { color: #666; font-size: 14px; margin-bottom: 24px; line-height: 1.4; }
-    
-    .file-input-wrapper { margin-bottom: 20px; }
-    input[type="file"] { display: none; }
-    .custom-file-btn {
-      display: inline-block;
-      width: 100%;
-      padding: 14px;
-      background-color: #f0f4f1;
-      color: #4a5d4e;
-      border: 2px dashed #8f9e8b;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    
-    button {
-      width: 100%;
-      padding: 14px;
-      background-color: #4a5d4e;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:disabled { background-color: #ccc; cursor: not-allowed; }
-    
-    #status { margin-top: 18px; font-size: 14px; font-weight: 500; }
-    .success { color: #2e7d32; }
-    .error { color: #c62828; }
-  </style>
+
+    <meta charset="UTF-8">
+
+    <meta 
+        name="viewport" 
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Felix & Sandra | Álbum de Recuerdos
+    </title>
+
+
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="style.css">
+
+
 </head>
+
+
 <body>
 
-  <div class="card">
-    <h1>📸 Compartir Recuerdos</h1>
-    <p>¡Gracias por acompañarnos! Sube aquí las fotos y videos que tomes durante la celebración.</p>
 
-    <div class="file-input-wrapper">
-      <label for="fileInput" class="custom-file-btn" id="fileLabel">
-        📷 Seleccionar fotos o videos
-      </label>
-      <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="updateLabel()">
-    </div>
+    <main class="container">
 
-    <button id="uploadBtn" onclick="uploadFiles()">Subir a la galería</button>
-    <div id="status"></div>
-  </div>
 
-  <script>
-    // REEMPLAZA CON LA URL DE TU GOOGLE APPS SCRIPT
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyiUmFnuxfErdk0YDXEjm5nJrIRGG1AtrkV-h143gwrp6npuJTic36L4G1Sg0hZuHEC/exec";
+        <section class="card">
 
-    function updateLabel() {
-      const input = document.getElementById('fileInput');
-      const label = document.getElementById('fileLabel');
-      if (input.files.length > 0) {
-        label.innerText = `📄 ${input.files.length} archivo(s) seleccionado(s)`;
-      } else {
-        label.innerText = '📷 Seleccionar fotos o videos';
-      }
-    }
 
-    async function uploadFiles() {
-      const fileInput = document.getElementById('fileInput');
-      const statusDiv = document.getElementById('status');
-      const uploadBtn = document.getElementById('uploadBtn');
-      const files = fileInput.files;
 
-      if (files.length === 0) {
-        statusDiv.className = "error";
-        statusDiv.innerText = "Por favor selecciona al menos una foto.";
-        return;
-      }
+            <!-- FOTO DE LOS NOVIOS -->
 
-      uploadBtn.disabled = true;
-      
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        statusDiv.className = "";
-        statusDiv.innerText = `Subiendo foto ${i + 1} de ${files.length}...`;
+            <div class="photo-container">
 
-        try {
-          const base64Data = await convertToBase64(file);
-          const payload = {
-            fileName: `${Date.now()}_${file.name}`,
-            mimeType: file.type,
-            base64: base64Data.split(',')[1]
-          };
+                <img 
+                    src="img/novios.jpg"
+                    alt="Felix y Sandra"
+                    class="couple-photo"
+                >
 
-          await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
+            </div>
 
-        } catch (err) {
-          console.error(err);
-        }
-      }
 
-      statusDiv.className = "success";
-      statusDiv.innerText = "¡Listo! Muchas gracias por compartir tus fotos. 🎉";
-      fileInput.value = "";
-      updateLabel();
-      uploadBtn.disabled = false;
-    }
 
-    function convertToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-      });
+
+            <!-- INFORMACIÓN DE LA BODA -->
+
+            <h1>
+                Felix & Sandra 💍
+            </h1>
+
+
+            <h2>
+                25 de Julio, 2026
+            </h2>
+
+
+
+            <p class="message">
+
+                Gracias por acompañarnos en este día tan especial.
+
+                Comparte las fotos y videos que captures
+                durante la celebración para crear juntos
+                nuestro álbum de recuerdos.
+
+                ✨
+
+            </p>
+
+
+
+
+            <div class="separator"></div>
+
+
+
+
+
+            <!-- ZONA DE CARGA -->
+
+            <div 
+                id="dropArea"
+                class="upload-area"
+            >
+
+
+                <div class="upload-icon">
+
+                    📷
+
+                </div>
+
+
+
+                <p>
+
+                    Toca aquí o arrastra tus archivos
+
+                </p>
+
+
+
+                <small>
+
+                    Máximo 3 archivos por envío
+
+                </small>
+
+
+                <small>
+
+                    Fotos hasta 15 MB
+
+                    <br>
+
+                    Videos hasta 50 MB
+
+                </small>
+
+
+
+
+                <input
+
+                    id="fileInput"
+
+                    type="file"
+
+                    accept="
+                    image/jpeg,
+                    image/png,
+                    image/webp,
+                    image/heic,
+                    image/heif,
+                    video/mp4,
+                    video/quicktime"
+
+                    multiple
+
+                    hidden
+
+                >
+
+
+            </div>
+
+
+
+
+
+
+            <!-- ARCHIVOS SELECCIONADOS -->
+
+            <div 
+                id="fileList"
+                class="file-list"
+            >
+
+            </div>
+
+
+
+
+
+
+
+            <!-- BOTÓN SUBIR -->
+
+
+            <button
+
+                id="uploadButton"
+
+                class="upload-button"
+
+                disabled
+
+            >
+
+                Compartir recuerdos 📤
+
+
+            </button>
+
+
+
+
+
+
+
+            <!-- PROGRESO -->
+
+            <div 
+                class="progress-container"
+            >
+
+
+                <div
+
+                    id="progressBar"
+
+                    class="progress-bar"
+
+                ></div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- MENSAJE DE ESTADO -->
+
+
+            <div
+
+                id="status"
+
+                class="status"
+
+            >
+
+            </div>
+
+
+
+
+        </section>
+
+
+    </main>
+
+
+
+
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+
+</html>
     }
   </script>
 </body>
